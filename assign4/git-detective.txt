@@ -1,0 +1,46 @@
+First, I tried to find the administrative merge commit by using `git log --grep="In read-only repositories"`
+  commit 19118cb8570e499e1a56e81740cee3d1c1206b44
+  Merge: a215853545 92481d1b26
+  Author: Junio C Hamano <gitster@pobox.com>
+  Date:   Mon Oct 10 10:08:43 2022 -0700
+
+      Merge branch 'js/merge-ort-in-read-only-repo'
+
+      In read-only repositories, "git merge-tree" tried to come up with a
+      merge result tree object, which it failed (which is not wrong) and
+      led to a segfault (which is bad), which has been corrected.
+
+      * js/merge-ort-in-read-only-repo:
+        merge-ort: return early when failing to write a blob
+        merge-ort: fix segmentation fault in read-only repositories
+
+I figured out that the change was made on 'js/merge-ort-in-read-only-repo' branch.
+So I tried to find descendant commit of 19118cb857 by using `git log --graph --oneline 19118cb8570e499e1a56e81740cee3d1c1206b44`
+  *   19118cb857 Merge branch 'js/merge-ort-in-read-only-repo'
+  |\
+  | * 92481d1b26 merge-ort: return early when failing to write a blob
+  | * 0b55d930a6 merge-ort: fix segmentation fault in read-only repositories
+  * |   a215853545 Merge branch 'tb/midx-repack-ignore-cruft-packs'
+
+I thought 0b55d930a6 would be related to the commit that I am looking for,
+so I looked up the commit by using `git log 0b55d930a6`.
+Johannes Schindelin authored the changes in Sep 28, 2022.
+
+  commit 0b55d930a69692c7f4e7b90e35fa41f6c46df4bc
+  Author: Johannes Schindelin <Johannes.Schindelin@gmx.de>
+  Date:   Wed Sep 28 07:29:21 2022 +0000
+
+      merge-ort: fix segmentation fault in read-only repositories
+
+      If the blob/tree objects cannot be written, we really need the merge
+      operations to fail, and not to continue (and then try to access the tree
+      object which is however still set to `NULL`).
+
+      Let's stop ignoring the return value of `write_object_file()` and
+      `write_tree()` and set `clean = -1` in the error case.
+
+      Reviewed-by: Elijah Newren <newren@gmail.com>
+      Signed-off-by: Johannes Schindelin <johannes.schindelin@gmx.de>
+      Signed-off-by: Junio C Hamano <gitster@pobox.com>
+
+generate patch files by using `git format-patch -1 0b55d930a6`

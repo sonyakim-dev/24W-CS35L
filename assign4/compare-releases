@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Check if the number of arguments is correct
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <arg1> <arg2>"
+  exit 1
+fi
+
+git diff $1 $2

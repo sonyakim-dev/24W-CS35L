@@ -1,0 +1,13 @@
+#!/bin/bash
+
+git log --format="%cd" $@ \
+  | cut -d " " -f 6 \
+  | sort -n \
+  | uniq -c \
+  | awk '{print $2" "$1}'
+
+# get git log in commitdate format
+# | divide column by space and get 6th column which is time zone
+# | sort the time zones in numerical order
+# | count the number of occurrences of each time zone
+# | print the time zone and the number of occurrences

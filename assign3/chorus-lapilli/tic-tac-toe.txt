@@ -1,0 +1,56 @@
+- Download code zip file from https://codesandbox.io/p/sandbox/react-dev-j67kkz
+
+- `npm install` package
+
+- `npm start` to start
+
+- <button> to create a button
+
+- React components need to return a single JSX element and not multiple adjacent JSX elements 
+  <>
+    <button className="square">X</button>
+    <button className="square">X</button>
+  </>
+
+- pass data through props
+  function Square({ value }) { ... }
+
+- render variable inside JSX using curly braces {}
+  <button className="square">{value}</button>
+
+- pass handleClick funtion to onClick prop
+  <button
+    className="square"
+    onClick={handleClick}
+  >
+  ** Option + Command + J to open browser console
+
+- remember things using useState. `value` stores the value, `setValue` is a function that can be used to change the value
+  import { useState } from 'react';
+  const [value, setValue] = useState(null);
+
+* React DevTools: check the props and the state of your React components
+
+- declares a `state` variable named squares that defaults to an array of 9 nulls corresponding to the 9 squares
+  const [squares, setSquares] = useState(Array(9).fill(null));
+
+- pass `squares` value and `handleClick` as a prop to `Square` components
+  <Square value={squares[0]} onSquareClick={handleClick} />
+
+- When you were passing `onSquareClick={handleClick}`, you were passing the handleClick function down as a prop.
+  You were not calling it! But now you are calling that function right away—notice the parentheses in handleClick(0)—and that’s why it runs too early.
+  You don’t want to call handleClick until the user clicks!
+
+* The DOM <button> element’s onClick attribute has a special meaning to React because it is a built-in component.
+  For custom components like Square, the naming is up to you.
+
+* not mutating (changing the underlying data) directly, you gain several benefits
+  Avoiding direct data mutation lets you keep previous versions of the data intact, and reuse them later.
+  By default, all child components re-render automatically when the state of a parent component changes.
+  skip re-rendering a part of the tree that clearly wasn’t affected by it for performance reasons.
+  Immutability makes it very cheap for components to compare whether their data has changed or not.
+
+- use map to transform your history of moves into React elements representing buttons on the screen, and display a list of buttons to “jump” to past moves
+
+- Keys tell React about the identity of each component
+

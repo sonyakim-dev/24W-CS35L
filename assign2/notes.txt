@@ -1,0 +1,167 @@
+-------EXERCISE--------
+2.1.
+1. compute 2**(607 - 1) * (2**607 - 1) in the *scratch* buffer
+   `(* (expt 2 (- 607 1)) (- (expt 2 607) 1))`
+   141053783706712069063207958086063189881486743514715667838838675999954867742652380114104193329037690251561950568709829327164087724366370087116731268159313652487450652439805877296207297446723295166658228846926807786652870188920867879451478364569313922060370695064736073572378695176473055266826253284886383715072974324463835300053138429460296575143368065570759537328128
+
+2. determine how many bits it would take to represent this number in base-2 notation
+   `(+ (logb (* (expt 2 (- 607 1)) (- (expt 2 607) 1)))1)`
+   1213
+
+3. use M-: to compute 2**(607 - 1) * (2**607 - 1)
+   `M-: (* (expt 2 (- 607 1)) (- (expt 2 607) 1))`
+   296207297446723295166658228846926807786652870188920867879451478364569313922060370695064736073572378695176473055266826253284886383715072974324463835300053138429460296575143368065570759537328128
+
+4. Type C-h b and look for two keybindings: C-h k and M-SPC using C-h b
+   C-h k: describe-key
+   M-SPC: cycle-spacing
+
+5. Type C-h k C-h k and describe what happens and why
+   C-h k C-h k displays the full description of the key C-h k specifically,
+   however, C-h b displays the whole list of keybindings and you can find the keybinding of C-h k by using C-s(search) C-h k.
+
+6. Type C-h k M-SPC and describe what happens and why
+   C-h k M-SPC displays the full description of the key M-SPC specifically,
+   however, C-h b displays the whole list of keybindings and you can find the keybinding of M-SPC by using C-s M-SPC.
+
+7. Try out M-SPC on some sample text with a lot of white space, to see how it works.
+   It cycle through different spacing options for the current point in the buffer.
+   
+
+-------HOMEWORK--------
+
+1. What happens when this script is invoked on an empty file like /dev/null, and why?
+  `python2 randline.py /dev/null`: IndexError is thrown
+  
+      File "randline.py", line 70, in <module>
+        main()
+      File "randline.py", line 64, in main
+        sys.stdout.write(generator.chooseline())
+      File "randline.py", line 34, in chooseline
+        return random.choice(self.lines)
+      File "/usr/lib64/python2.7/random.py", line 277, in choice
+        return seq[int(self.random() * len(seq))]  # raises IndexError if seq is empty
+    IndexError: list index out of range
+
+   This is because /dev/null is empty.
+   `random.choice(seq)` returns a random element from the non-empty sequence seq. If seq is empty, raises IndexError.
+   (Reference: https://docs.python.org/3/library/random.html)
+
+2. What happens when this script is invoked with Python 3 rather than Python 2, and why?
+  `python3 randline.py /dev/null`: SyntaxError is thrown
+
+      File "/w/home.22/home/soyeonning/assign2/randline.py", line 65
+        except IOError as (errno, strerror):
+                          ^
+    SyntaxError: invalid syntax
+
+  This is because the tuple parameter unpacking in exception handling is not supported in Python 3.
+  (Reference: https://peps.python.org/pep-3113/)
+  `except IOError as (errno, strerror):` should be changed to the following code.
+
+    except IOError as error:
+      errno, strerror = err.args
+
+3. What happens when your shuf.py script is invoked with Python 2 rather than Python 3, and why?
+  `python2 shuf.py sample': Syntax Error is thrown
+  
+       File "shuf.py", line 34
+         raise SyntaxError(f"extra operand: '{extra_args[0]}'")
+                                                        ^
+     SyntaxError: invalid syntax
+     
+  This is because f-string was introduced in Python 3.6
+
+4. 
+   `time shuf < /usr/share/unicode/ucd/BidiTest.txt > /dev/null`
+      real    0m0.090s
+      user    0m0.064s
+      sys     0m0.012s
+
+      real    0m0.086s
+      user    0m0.071s
+      sys     0m0.014s
+
+      real    0m0.076s
+      user    0m0.064s
+      sys     0m0.012s
+
+      user: sum=0.199s, median=0.064s
+      sys: sum=0.038s, median=0.012s
+
+   `time /usr/bin/python3 shuf.py < /usr/share/unicode/ucd/BidiTest.txt > /dev/null`
+      real    0m1.016s
+      user    0m0.956s
+      sys     0m0.054s
+
+      real    0m1.015s
+      user    0m0.943s
+      sys     0m0.066s
+
+      real    0m1.017s
+      user    0m0.943s
+      sys     0m0.069s
+
+      user: sum=2.842s, median=0.943s
+      sys: sum=0.189s, median=0.066s
+
+   `time /usr/local/cs/bin/python3 shuf.py < /usr/share/unicode/ucd/BidiTest.txt > /dev/null`
+      real    0m0.820s
+      user    0m0.736s
+      sys     0m0.063s
+
+      real    0m0.808s
+      user    0m0.734s
+      sys     0m0.062s
+
+      real    0m0.817s
+      user    0m0.751s
+      sys     0m0.053s
+
+      user: sum=2.221s, median=0.736s
+      sys: sum=0.178s, median=0.062s
+
+5. `lscpu`
+   Architecture:        x86_64
+   CPU op-mode(s):      32-bit, 64-bit
+   Byte Order:          Little Endian
+   CPU(s):              4
+   On-line CPU(s) list: 0-3
+   Thread(s) per core:  1
+   Core(s) per socket:  4
+   Socket(s):           1
+   NUMA node(s):        1
+   Vendor ID:           GenuineIntel
+   CPU family:          6
+   Model:               85
+   Model name:          Intel(R) Xeon(R) Silver 4116 CPU @ 2.10GHz
+   Stepping:            4
+   CPU MHz:             2095.075
+   BogoMIPS:            4190.15
+   Hypervisor vendor:   Microsoft
+   Virtualization type: full
+   L1d cache:           32K
+   L1i cache:           32K
+   L2 cache:            1024K
+   L3 cache:            16896K
+   NUMA node0 CPU(s):   0-3
+
+   `cat /etc/os-release`
+   NAME="Red Hat Enterprise Linux"
+   VERSION="8.5 (Ootpa)"
+   ID="rhel"
+   ID_LIKE="fedora"
+   VERSION_ID="8.5"
+   PLATFORM_ID="platform:el8"
+   PRETTY_NAME="Red Hat Enterprise Linux 8.5 (Ootpa)"
+   ANSI_COLOR="0;31"
+   CPE_NAME="cpe:/o:redhat:enterprise_linux:8::baseos"
+   HOME_URL="https://www.redhat.com/"
+   DOCUMENTATION_URL="https://access.redhat.com/documentation/red_hat_enterprise_linux/8/"
+   BUG_REPORT_URL="https://bugzilla.redhat.com/"
+
+   REDHAT_BUGZILLA_PRODUCT="Red Hat Enterprise Linux 8"
+   REDHAT_BUGZILLA_PRODUCT_VERSION=8.5
+   REDHAT_SUPPORT_PRODUCT="Red Hat Enterprise Linux"
+   REDHAT_SUPPORT_PRODUCT_VERSION="8.5"
+

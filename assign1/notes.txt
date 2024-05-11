@@ -1,0 +1,75 @@
+1. Where are the sh, sleep, and type commands located?
+   `which sh sleep type`
+   /usr/bin/sh
+   /usr/local/cs/bin/sleep
+   /usr/bin/type
+
+2. What executable programs in /usr/bin have names that are exactly three characters long and start with the two letters se, and what do they do?
+   `find /usr/bin/se[a-z]`
+   `man sed` : stream editor for filtering and transforming text
+   `man seq` : print a sequence of numbers
+
+3. When you execute the command named by the symbolic link /usr/local/cs/bin/emacs, which file actually is executed?
+   `readlink -f /usr/local/cs/bin/emacs`
+   /usr/local/cs/emacs-29.1/bin/emacs-29.1
+
+4. What is the version number of the /usr/bin/gcc program? of the plain gcc program? Why are they different programs?
+   `/usr/bin/gcc --version` : 8.5.0
+   `gcc --version` : 13.2.0
+
+5. The chmod program changes permissions on a file. What does the symbolic mode u+sx,o-w mean, in terms of permissions?
+   `man chmod`
+   user can set user/group ID on execution and execute files, and others cannot write files.
+
+6. Use the find command to find all directories that are located under (or are the same as) the directory /usr/local/cs, and that were modified after the directory /usr/local/cs/lib was modified. Sort the directory names alphabetically and list just the first five names, or list them all if there are fewer than five names.
+   `find /usr/local/cs -type d -newer /usr/local/cs/lib | sort | head -5`
+   /usr/local/cs
+   /usr/local/cs/autoconf-2.72
+   /usr/local/cs/autoconf-2.72/bin
+   /usr/local/cs/autoconf-2.72/share
+   /usr/local/cs/autoconf-2.72/share/autoconf
+
+7. How many regular files are in the Python source code distribution located in the directory matching the globbing pattern /usr/local/cs/src/python/Python-*? Do not count directories or symbolic links or anything else; just regular files.
+   `find /usr/local/cs/src/python/Python-* -type f | wc -l`
+   9841
+
+8. How many of the files in /usr/local/cs/bin are symbolic links?
+   `find /usr/local/cs/bin -type l | wc -l`
+   371
+
+9. What is the oldest file in the /usr/lib64 directory? Use the last-modified time to determine age. Specify the name of the file without the /usr/lib64/ prefix. Don’t ignore files whose names start with ".", but do ignore files under subdirectories of /usr/lib64/. Consider files of all types, that is, your answer might be a regular file, or a directory, or something else.
+   `find /usr/lib64 -maxdepth 1 -printf '%T+ %p\n' | sort | head -1 | sed s/.*\\/usr\\/lib64\\///`
+   libbz2.so
+
+10. In Emacs, what commands have transpose in their name? 
+   `M-x apropos-command RET -> transpose`
+    transpose-chars: C-t
+    transpose-lines: C-x C-t
+    transpose-paragraphs: M-x ... RET
+    transpose-regions: M-x ... RET
+    transpose-sentences: M-x ... RET
+    transpose-sexps: C-M-t
+    transpose-words: M-t
+
+11. What does the Emacs yank function do, and how can you easily invoke it using keystrokes?
+   paste killed characters, C-y
+
+12. Use the ps command to find your own login shell’s process, all that process’s ancestors, and all its descendants. Some ps options that you might find useful include -e, -f, -j, -l, -t, -H, and -T,
+   `ps -fH -u $LOGNAME --forest`
+    UID          PID    PPID  C STIME TTY          TIME CMD
+    soyeonn+  355194  355178  0 13:32 ?        00:00:03 sshd: soyeonning@pts/4
+    soyeonn+  355198  355194  0 13:32 pts/4    00:00:01  \_ -bash
+    soyeonn+  619468  355198  0 18:34 pts/4    00:00:00      \_ ps -fH -u soyeonning --forest
+    soyeonn+  355185       1  0 13:32 ?        00:00:00 /usr/lib/systemd/systemd --user
+    soyeonn+  355187  355185  0 13:32 ?        00:00:00  \_ (sd-pam)
+    soyeonn+  355193  355185  0 13:32 ?        00:00:00  \_ /usr/bin/pulseaudio --daemonize=no --log-target=j
+    soyeonn+  355304  355185  0 13:32 ?        00:00:00  \_ /usr/bin/dbus-daemon --session --address=systemd:
+
+  EXTRA POINTS: For printing all that process's ancestors and all its descendants, use q12script.sh
+    UID          PID    PPID  C STIME TTY          TIME CMD
+    root           1       0  0  2023 ?        00:49:34 /usr/lib/systemd/systemd --switched-root --system --deseria
+    root        1203       1  0  2023 ?        00:00:45 /usr/sbin/sshd -D -oCiphers=aes256-gcm@openssh.com,chacha20
+    root     3930219    1203  0 12:17 ?        00:00:00  \_ sshd: soyeonning [priv]
+    soyeonn+ 3930384 3930219  0 12:17 ?        00:00:00      \_ sshd: soyeonning@pts/33
+    soyeonn+ 3930386 3930384  0 12:17 pts/33   00:00:00          \_ -bash
+    soyeonn+  104300 3930386  0 17:31 pts/33   00:00:00              \_ /bin/bash ./q12script.sh

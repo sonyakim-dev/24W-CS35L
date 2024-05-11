@@ -1,0 +1,30 @@
+1.
+  `cd ~eggert/src/github/git`
+  `git log --graph --pretty=format:'%h %an %cn' --ancestry-path 2a7d63a2453e2c30353342a2c9385fa22a846987..c03bee6e9f5c05259f5f501e1f47cd8adb63af38`
+    --graph option shows log in graph form
+    %h prints commit hash, %an prints author, and %cn prints committer
+    --ancestry-path limit to ancestors of the commit
+
+2. 
+  ~eggert/src/github/git has master, maint, next, seend, todo branches.
+  The last commit is 
+    commit 097c28db78db288c8087a515d3454f9c83911874
+    Merge: c5887af55d 03f72a4ed8
+    Author: Junio C Hamano <gitster@pobox.com>
+    Date:   Tue Feb 6 14:31:21 2024 -0800
+
+        Merge branch 'rj/test-with-leak-check'
+
+        More tests that are supposed to pass leak sanitizer are marked as such.
+  
+  git repository has only master branch.
+  The last commit is
+    commit c59ba68ea7d1b4614fa964403a6c662dca0dd212
+    Merge: e864023188 568459bf5e
+    Author: Junio C Hamano <gitster@pobox.com>
+    Date:   Wed Feb 14 15:36:06 2024 -0800
+
+        Merge branch 'js/check-null-from-read-object-file'
+
+        The code paths that call repo_read_object_file() have been
+  

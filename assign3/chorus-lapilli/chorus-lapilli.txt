@@ -1,0 +1,60 @@
+** DO NOT USE `if (variable)` for null or undefined type **
+** RECOMMENDED: `if (variable === null)` or `if (variable === undefined)` !!!!! **
+
+
+1. Initialize state variables:
+  - `squares`: an array of 9 nulls representing the game board.
+  - `xIsNext`: a boolean representing whose turn it is.
+  - `lastRemovedPosition`: a number representing the last removed piece's position.
+  - `message`: a string for displaying messages to the user. (optional)
+  We will use lastRemovedPosition to tell that it's in moving phase, a piece to move is clicked, and it's time to click a square to move the piece.
+
+2. Define the `handleClick` function which is triggered when a square is clicked:
+  - If there's already a winner, return.
+  - If the current player has less than 3 pieces and the clicked square is not empty, return.
+  - If the current player has 3 pieces: => moving phase
+    - If a piece hasn't been removed yet (lastRemovedPosition is null):
+      - If the center piece belongs to the current player:
+	- If the clicked square isn't the center, return.
+	- Else setLastRemovedPosition to i and return
+      - Else if there's no center piece:
+	- If the clicked square belongs to the current player, check if it's movable.
+	  - If movable, setLastRemovedPosition to i and return
+	  - If not, setLastRemovedPosition to null and return.
+    - If a piece has been removed (lastRemovedPosition is not null):
+      - If the clicked square is a valid move, move the piece there, setLastRemovedPosition null, switch turns, and return.
+      - If not, return.
+  - If the clicked square is empty, place the current player's piece there, switch turns, and clear the message.
+
+3. Calculate the winner and generate the status message.
+
+4. Render the game board and the status and message texts.
+
+
+`npm pack --dry-run`
+npm notice 
+npm notice 📦  chorus-lapilli@0.0.0
+npm notice === Tarball Contents === 
+npm notice 15.9kB chorus-lapilli.tgz          
+npm notice 3.1kB  chorus-lapilli.txt          
+npm notice 677B   package.json                
+npm notice 218B   public/index.html           
+npm notice 4.7kB  src/App.js                  
+npm notice 256B   src/index.js                
+npm notice 265B   src/Square.js               
+npm notice 1.0kB  src/styles.css              
+npm notice 401B   src/utils/calculateWinner.js
+npm notice 316B   src/utils/findValidMove.js  
+npm notice 12.1kB test_chorus_lapilli.py      
+npm notice 2.5kB  tic-tac-toe.txt             
+npm notice === Tarball Details === 
+npm notice name:          chorus-lapilli                          
+npm notice version:       0.0.0                                   
+npm notice filename:      chorus-lapilli-0.0.0.tgz                
+npm notice package size:  25.0 kB                                 
+npm notice unpacked size: 41.4 kB                                 
+npm notice shasum:        69d06f5b1c83af2f171926c267c0c000d113f8bd
+npm notice integrity:     sha512-KsGIW4O1n7cd9[...]1lLCVpZw40V8A==
+npm notice total files:   12                                      
+npm notice 
+chorus-lapilli-0.0.0.tgz

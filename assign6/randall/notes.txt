@@ -1,0 +1,74 @@
+Setup
+  - download randall-git.tgz
+  - `tar -xzvf randall-git.tgz`: unzip tgz file
+  - `git reset --hard` : clone repo
+
+Make check
+  - add 'check' in Makefile and return SUCCESS or FAIL
+  - test cases
+      NUMBERS = 1 2 7 15 20 34 100
+      RAND_METHODS = rdrand lrand48_r /dev/urandom
+      OUT_METHODS = stdio 5 10
+
+Splitting file
+  - created options.c, options.h, output.c, output.h,
+    rand64-hw.c, rand64-hw.h, rand64-sw.c, rand64-sw.h
+  - had to remove the static keyword
+  - include all .c and .h files in Makefile
+    `randall: *.c *.h
+	    $(CC) $(CFLAGS) *.c -o $@`
+
+Options
+  - unistd.h library to parse command line options
+  - `getopt(argc, argv, "i:o:")`: get option of -i and -o
+      : means catch optarg, :: means the option is optional
+  - 'optarg' contains option arg
+  - 'optind' contains the index of the next element to be processed in argv
+  - used enum for storing the type of input and output
+
+rand64-sw
+  - created 'software_lrand48_r_init', 'software_lrand48_r', 'software_lrand48_r_fini' functions
+    to handle lrand48_r option.
+  - i had to generates 64-bit random number by generating two 32-bit numbers and combining them
+
+Output
+  - created 'generate_random_wor' and 'write_chunks' functions to handle -o N option
+
+Benchmark
+  `time dd if=/dev/urandom ibs=8192 obs=8192 count=16384 >/dev/null`
+    real    0m0.922s
+    user    0m0.024s
+    sys     0m0.889s
+
+  `time ./randall 133562368 > /dev/null`
+    real    0m3.180s
+    user    0m3.147s
+    sys     0m0.018s
+
+  `time ./randall 133562368 | cat >/dev/null`
+    real    0m3.435s
+    user    0m3.292s
+    sys     0m0.260s
+
+  `time ./randall 133562368 > rand.data`
+    real    0m3.315s
+    user    0m3.126s
+    sys     0m0.139s
+
+  `time ./randall 133562368 -i /dev/urandom >/dev/null`
+    real    0m1.868s
+    user    0m0.858s
+    sys     0m0.979s
+
+  `time ./randall 133562368 -i lrand48_r >/dev/null`
+    real    0m0.799s
+    user    0m0.772s
+    sys     0m0.014s
+
+  `time ./randall 133562368 -o 1000 >/dev/null`
+    real    0m2.818s
+    user    0m2.752s
+    sys     0m0.050s
+
+  => lrand48_r is the fastest, hardware is the slowest
+  => get faster when output with a big chunk (-o N option)
